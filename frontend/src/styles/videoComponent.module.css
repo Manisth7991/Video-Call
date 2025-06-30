@@ -65,7 +65,7 @@
     right: 2vw;
     height: 80vh;
     width: 28vw;
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     background: #fff;
     border-radius: 10px;
     padding: 20px;
@@ -86,7 +86,7 @@
 
 /* Chat title */
 .chatTitle {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     text-align: center;
     margin-bottom: 10px;
     color: #333;
@@ -127,7 +127,7 @@
     font-weight: bold;
     color: #007bff;
     margin-bottom: 4px;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
 }
 
 /* Chat message text */
@@ -156,16 +156,16 @@
 /* Make TextField's input larger */
 .chatInput :global(.MuiInputBase-root) {
     margin: 10px;
-    font-size: 1.5rem;
+    font-size: 1.1rem;
 }
 .chatInput :global(.MuiInputBase-input) {
-    font-size: 1.5rem;
-    padding: 12px;
+    font-size: 1.1rem;
+    padding: 8px;
 }
 
 /* Make the label larger */
 .chatInput :global(.MuiInputLabel-root) {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
 }
 
 /* RESPONSIVE DESIGN */

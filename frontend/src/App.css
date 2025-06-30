@@ -20,7 +20,7 @@
 }
 
 .landingPageContainer nav h2 {
-  font-size: 3rem;
+  font-size: 2.3rem;
   font-weight: 500;
 }
 
@@ -44,12 +44,12 @@
 
 .landingMainContainer > div:nth-child(1) {
   flex: 1;
-  font-size: 2.2rem;
+  font-size: 2rem;
   max-width: 600px;
 }
 
 .landingMainContainer > div:nth-child(1) p {
-  font-size: 2.2rem;
+  font-size: 2rem;
   margin-top: 0.8rem;
 }
 
@@ -86,7 +86,7 @@
 
 .landingMainContainer > div:nth-child(2) img {
   height: auto;
-  width: 560px;
+  width: 460px;
   border-radius: 1rem;
   object-fit: contain;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
@@ -195,7 +195,7 @@ body {
 
 /* === Hero Title Refinement === */
 .landingMainContainer > div:nth-child(1) h1 {
-  font-size: 5rem;
+  font-size: 4rem;
   line-height: 1.2;
   color: #ffffff;
 }
@@ -206,7 +206,7 @@ body {
 
 /* === Subtitle Smoother === */
 .landingMainContainer > div:nth-child(1) p {
-  font-size: 2rem;
+  font-size: 1.6rem;
   color: #f0f0f0;
   opacity: 0.85;
 }

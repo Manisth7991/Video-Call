@@ -458,8 +458,8 @@ function VideoMeetComponent() {
                     <h2>Enter into Lobby </h2>
                     <TextField id="outlined-basic" label="Username" value={username} onChange={e => setUsername(e.target.value)} variant="outlined" className={styles.chatInput}/>
                     <Button variant="contained" onClick={connect} sx={{
-                        fontSize: '1.2rem',
-                        padding: '12px 24px',
+                        fontSize: '1rem',
+                        padding: '8px 24px',
                         margin: '10px',
                         borderRadius: '8px',
                         textTransform: 'capitalize',
@@ -497,8 +497,8 @@ function VideoMeetComponent() {
                                 variant="contained"
                                 onClick={sendMessage}
                                 sx={{
-                                    fontSize: '1.2rem',
-                                    padding: '12px 24px',
+                                    fontSize: '1rem',
+                                    padding: '8px 24px',
                                     borderRadius: '8px',
                                     textTransform: 'capitalize',
                                 }}
