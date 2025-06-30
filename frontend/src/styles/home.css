@@ -1,0 +1,105 @@
+/* Home.css */
+
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f4f6f8;
+  height: 100%;
+}
+
+/* Navbar */
+.navBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #3f51b5;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navBar h2 {
+  margin: 0;
+}
+
+.navBar p {
+  margin: 0 10px;
+  font-weight: 500;
+}
+
+.navBar button {
+  color: white;
+  border: 1px solid white;
+  margin-left: 1rem;
+  text-transform: none;
+}
+
+/* Main Container */
+.meetContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 2rem;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+
+/* Left Panel */
+.leftPanel {
+  flex: 1;
+  min-width: 300px;
+  max-width: 500px;
+}
+
+.leftPanel h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.leftPanel .MuiTextField-root {
+  flex: 1;
+}
+
+.leftPanel button {
+  height: 56px;
+}
+
+/* Right Panel */
+.rightPanel {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 500px;
+  min-width: 280px;
+}
+
+.rightPanel img {
+  width: 100%;
+  max-width: 350px;
+  border-radius: 10px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .meetContainer {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .leftPanel h2 {
+    font-size: 1.5rem;
+  }
+
+  .navBar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

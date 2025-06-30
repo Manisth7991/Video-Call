@@ -1,60 +1,213 @@
+/* Container for full screen video meeting */
 .meetVideoContainer {
     position: relative;
     height: 100vh;
-    background: rgb(1, 4, 48);
+    background-color: rgb(1, 4, 48);
+    overflow: hidden;
 }
 
+/* Local user's video thumbnail */
 .meetUserVideo {
     position: absolute;
     bottom: 10vh;
+    left: 2vw;
     height: 20vh;
     width: auto;
-    left: 0;
     border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
+/* Button container at bottom center */
 .buttonContainers {
     position: absolute;
-    width: 100vw;
-    bottom: 0;
+    bottom: 2vh;
+    width: 100%;
     text-align: center;
+    z-index: 10;
 }
 
 .buttonContainers svg {
-    font-size: 3rem;
+    font-size: 2.5rem;
+    margin: 0 10px;
+    cursor: pointer;
+    color: white;
+    transition: transform 0.2s ease;
 }
 
-.conferenceView { 
+.buttonContainers svg:hover {
+    transform: scale(1.1);
+    color: #ff4d4d;
+}
 
+/* Container for other users’ video tiles */
+.conferenceView {
     display: flex;
-    padding: 10px;
-    gap: 10px;
+    flex-wrap: wrap;
+    gap: 10rem;
+    padding: 10px 10px 80px 10px;
+    justify-content: flex-start;
+    align-items: flex-start;
 }
 
-.conferenceView  video {
-    width: 40vw;
-    height: 20vh;
-    min-width: 30vw;
+.conferenceView video {
+    width: 100%;
+    max-width: 300px;
+    aspect-ratio: 16 / 9;
     border-radius: 10px;
+    object-fit: cover;
+    background-color: #000;
 }
 
+/* Chat panel */
 .chatRoom {
     position: absolute;
-    height: 90vh;
-    right: 0;
-    background: white;
+    top: 5vh;
+    right: 2vw;
+    height: 80vh;
+    width: 28vw;
+    font-size: 1.5rem;
+    background: #fff;
     border-radius: 10px;
-    width: 30vw;
-    padding-inline: 20px;
+    padding: 20px;
+    box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 15;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
+/* Chat container wrapper */
 .chatContainer {
     position: relative;
     height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
+/* Chat title */
+.chatTitle {
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 10px;
+    color: #333;
+}
 
+/* Display area for chat messages */
+.chattingDisplay {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    margin-bottom: 70px; /* space for input */
+}
+
+/* Scrollbar styling */
+.chattingDisplay::-webkit-scrollbar {
+    width: 8px;
+}
+.chattingDisplay::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+.chattingDisplay::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Each chat message block */
+.chatMessage {
+    margin-bottom: 16px;
+    padding: 10px 14px;
+    background-color: #f1f1f1;
+    border-radius: 10px;
+    max-width: 90%;
+    word-wrap: break-word;
+}
+
+/* Sender name */
+.senderName {
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 4px;
+    font-size: 1.3rem;
+}
+
+/* Chat message text */
+.messageText {
+    font-size: 1.1rem;
+    color: #333;
+}
+
+/* Chat input and send button area */
 .chattingArea {
     position: absolute;
     bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    padding: 12px 16px;
+    gap: 12px;
+    background-color: #f9f9f9;
+    border-top: 1px solid #ddd;
+    z-index: 10;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Input box styling */
+/* Make TextField's input larger */
+.chatInput :global(.MuiInputBase-root) {
+    margin: 10px;
+    font-size: 1.5rem;
+}
+.chatInput :global(.MuiInputBase-input) {
+    font-size: 1.5rem;
+    padding: 12px;
+}
+
+/* Make the label larger */
+.chatInput :global(.MuiInputLabel-root) {
+    font-size: 1.3rem;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+    .conferenceView {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .conferenceView video {
+        width: 90vw;
+        height: 25vh;
+    }
+
+    .chatRoom {
+        width: 90vw;
+        height: 60vh;
+        top: 10vh;
+        right: 5vw;
+        font-size: 1rem;
+    }
+
+    .meetUserVideo {
+        bottom: 5vh;
+        left: 5vw;
+        height: 18vh;
+    }
+
+    .buttonContainers svg {
+        font-size: 2rem;
+    }
+
+    .chattingArea {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .sendButton {
+        width: 100%;
+    }
+
+    .chatInput {
+        width: 100%;
+    }
 }

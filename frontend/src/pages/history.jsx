@@ -1,23 +1,18 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { AuthContext } from '../contexts/AuthContext'
+import React, { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import Card from '@mui/material/Card';
-import Box from '@mui/material/Box';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import {
+    Card,
+    Box,
+    CardContent,
+    IconButton,
+    Typography,
+} from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 
-import { IconButton } from '@mui/material';
 export default function History() {
-
-
     const { getHistoryOfUser } = useContext(AuthContext);
-
-    const [meetings, setMeetings] = useState([])
-
-
+    const [meetings, setMeetings] = useState([]);
     const routeTo = useNavigate();
 
     useEffect(() => {
@@ -28,61 +23,87 @@ export default function History() {
             } catch {
                 // IMPLEMENT SNACKBAR
             }
-        }
+        };
 
         fetchHistory();
-    }, [])
+    }, []);
 
-    let formatDate = (dateString) => {
-
+    const formatDate = (dateString) => {
         const date = new Date(dateString);
-        const day = date.getDate().toString().padStart(2, "0");
-        const month = (date.getMonth() + 1).toString().padStart(2, "0")
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
         const year = date.getFullYear();
-
-        return `${day}/${month}/${year}`
-
-    }
+        return `${day}/${month}/${year}`;
+    };
 
     return (
-        <div>
+        <Box
+            sx={{
+                padding: '2rem',
+                backgroundColor: '#f4f6f8',
+                minHeight: '100vh',
+            }}
+        >
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-start',
+                    marginBottom: '1.5rem',
+                }}
+            >
+                <IconButton
+                    onClick={() => routeTo('/home')}
+                    sx={{
+                        backgroundColor: '#1976d2',
+                        color: '#fff',
+                        '&:hover': {
+                            backgroundColor: '#115293',
+                        },
+                    }}
+                >
+                    <HomeIcon />
+                </IconButton>
+            </Box>
 
-            <IconButton onClick={() => {
-                routeTo("/home")
-            }}>
-                <HomeIcon />
-            </IconButton >
-            {
-                (meetings.length !== 0) ? meetings.map((e, i) => {
-                    return (
+            <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', marginBottom: '2rem' }}>
+                Meeting History
+            </Typography>
 
-                        <>
-
-
-                            <Card key={i} variant="outlined">
-
-
-                                <CardContent>
-                                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                        Code: {e.meetingCode}
-                                    </Typography>
-
-                                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                        Date: {formatDate(e.date)}
-                                    </Typography>
-
-                                </CardContent>
-
-
-                            </Card>
-
-
-                        </>
-                    )
-                }) : <></>
-
-            }
-
-        </div>
-    )
+            <Box
+                sx={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                    gap: '1.5rem',
+                }}
+            >
+                {meetings.length !== 0 ? (
+                    meetings.map((e, i) => (
+                        <Card
+                            key={i}
+                            variant="outlined"
+                            sx={{
+                                boxShadow: 3,
+                                borderRadius: '12px',
+                                padding: '1rem',
+                                backgroundColor: '#fff',
+                            }}
+                        >
+                            <CardContent>
+                                <Typography sx={{ fontSize: 16, fontWeight: 600 }} gutterBottom>
+                                    Meeting Code: <span style={{ color: '#1976d2' }}>{e.meetingCode}</span>
+                                </Typography>
+                                <Typography sx={{ fontSize: 14 }} color="text.secondary">
+                                    Date: {formatDate(e.date)}
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    ))
+                ) : (
+                    <Typography variant="body1" sx={{ color: 'gray' }}>
+                        No past meetings found.
+                    </Typography>
+                )}
+            </Box>
+        </Box>
+    );
 }

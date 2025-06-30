@@ -391,6 +391,7 @@ function VideoMeetComponent() {
     }
 
 
+
     useEffect(() => {
         if (screen !== undefined) {
             getDislayMedia();
@@ -398,8 +399,9 @@ function VideoMeetComponent() {
     }, [screen])
 
     let handleScreen = () => {
-        setScreen(!screen);
-    }
+        setScreen((prev) => !prev);
+    };
+
 
     let handleEndCall = () => {
         try {
@@ -453,50 +455,60 @@ function VideoMeetComponent() {
             {askForUsername === true ?
 
                 <div>
-
-
                     <h2>Enter into Lobby </h2>
-                    <TextField id="outlined-basic" label="Username" value={username} onChange={e => setUsername(e.target.value)} variant="outlined" />
-                    <Button variant="contained" onClick={connect}>Connect</Button>
-
-
+                    <TextField id="outlined-basic" label="Username" value={username} onChange={e => setUsername(e.target.value)} variant="outlined" className={styles.chatInput}/>
+                    <Button variant="contained" onClick={connect} sx={{
+                        fontSize: '1.2rem',
+                        padding: '12px 24px',
+                        margin: '10px',
+                        borderRadius: '8px',
+                        textTransform: 'capitalize',
+                    }}>Connect</Button>
                     <div>
                         <video ref={localVideoref} autoPlay muted></video>
                     </div>
 
                 </div> :
-
-
                 <div className={styles.meetVideoContainer}>
 
-                    {showModal ? <div className={styles.chatRoom}>
-
-                        <div className={styles.chatContainer}>
-                            <h1>Chat</h1>
+                    {showModal ? (
+                        <div className={styles.chatRoom}>
+                            <div className={styles.chatContainer}>
+                            <h1 className={styles.chatTitle}>Chat</h1>
 
                             <div className={styles.chattingDisplay}>
-                                {messages.length !== 0 ? messages.map((item, index) => {
-
-                                    console.log(messages)
-                                    return (
-                                        <div style={{ marginBottom: "20px" }} key={index}>
-                                            <p style={{ fontWeight: "bold" }}>{item.sender}</p>
-                                            <p>{item.data}</p>
-                                        </div>
-                                    )
-                                }) : <p>No Messages Yet</p>}
+                                {messages.length !== 0 ? messages.map((item, index) => (
+                                <div key={index} className={styles.chatMessage}>
+                                    <p className={styles.senderName}>{item.sender}</p>
+                                    <p className={styles.messageText}>{item.data}</p>
+                                </div>
+                                )) : <p>No Messages Yet</p>}
                             </div>
 
                             <div className={styles.chattingArea}>
-                                <TextField value={message} onChange={(e) => setMessage(e.target.value)} id="outlined-basic" label="Enter Your chat" variant="outlined" />
-                                <Button variant='contained' onClick={sendMessage}>Send</Button>
+                                <TextField
+                                value={message}
+                                onChange={(e) => setMessage(e.target.value)}
+                                label="Enter your chat"
+                                variant="outlined"
+                                className={styles.chatInput}
+                                />
+                                <Button
+                                variant="contained"
+                                onClick={sendMessage}
+                                sx={{
+                                    fontSize: '1.2rem',
+                                    padding: '12px 24px',
+                                    borderRadius: '8px',
+                                    textTransform: 'capitalize',
+                                }}
+                                >
+                                Send
+                                </Button>
                             </div>
-
-
+                            </div>
                         </div>
-                    </div> : <></>}
-
-
+                        ) : null}
                     <div className={styles.buttonContainers}>
                         <IconButton onClick={handleVideo} style={{ color: "white" }}>
                             {(video === true) ? <VideocamIcon /> : <VideocamOffIcon />}

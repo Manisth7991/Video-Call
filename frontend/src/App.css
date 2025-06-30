@@ -1,95 +1,243 @@
+/* === Base Layout === */
 .landingPageContainer {
   width: 100vw;
   height: 100vh;
-  background: url(/public/background.png);
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: center;
   color: white;
+  display: flex;
+  flex-direction: column;
 }
 
+/* === Navigation Bar === */
 .landingPageContainer nav {
-  padding-inline: 1.3rem;
-  padding-block: 1.6rem;
+  padding: 1.2rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
 }
+
 .landingPageContainer nav h2 {
-  font-size: 1.8rem;
+  font-size: 3rem;
   font-weight: 500;
 }
 
-.landingPageContainer nav .navlist{
+.landingPageContainer nav .navlist {
   display: flex;
   gap: 1.6rem;
   cursor: pointer;
+  flex-wrap: wrap;
+  font-size: 1.6rem;
 }
 
+/* === Main Landing Section === */
 .landingMainContainer {
   display: flex;
   justify-content: space-between;
-  padding-inline: 3rem;
-  height: 70vh;
   align-items: center;
+  padding: 2rem 3rem;
+  flex: 1;
+  gap: 2rem;
 }
 
 .landingMainContainer > div:nth-child(1) {
+  flex: 1;
   font-size: 2.2rem;
+  max-width: 600px;
+}
+
+.landingMainContainer > div:nth-child(1) p {
+  font-size: 2.2rem;
+  margin-top: 0.8rem;
 }
 
 .landingMainContainer > div:nth-child(1) div[role="button"] {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   padding: 0.8rem 1.6rem;
   background-color: #D97500;
   border-radius: 0.4rem;
   cursor: pointer;
   width: fit-content;
   margin-top: 1.2rem;
+  transition: background-color 0.3s ease;
 }
-.landingMainContainer > div:nth-child(1) div[role="button"] a{
+
+.landingMainContainer > div:nth-child(1) div[role="button"]:hover {
+  background-color: #b86000;
+}
+
+.landingMainContainer > div:nth-child(1) div[role="button"] a {
   text-decoration: none;
   color: white;
-  font-size: larger;
+  font-size: 1.5rem;
+}
+
+/* === Right Side: Image Layout === */
+.landingMainContainer > div:nth-child(2) {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
 }
 
 .landingMainContainer > div:nth-child(2) img {
-  height: 70vh;
-  width:auto;
-}
-
-.navBar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-inline: 20px;
-  text-align: center;
-}
-
-.meetContainer {
-  display: flex;
-  padding-inline: 20px;
-  height: 80vh;
-  gap: 10vw;
-  justify-content: center;
-}
-
-
-
-.leftPanel {
-  height: 100%;
-  display: flex;
-  align-items: center;
-
-}
-
-.rightPanel {
-  display: flex;
-  align-items: center;
-}
-
-.rightPanel > img {
-  width: 30vw;
   height: auto;
-  border-radius: 20px;
+  width: 560px;
+  border-radius: 1rem;
+  object-fit: contain;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease;
+  max-width: 100%;
 }
 
+
+.landingMainContainer > div:nth-child(2) img:first-child {
+  transform: rotate(-8deg);
+}
+
+.landingMainContainer > div:nth-child(2) img:last-child {
+  transform: rotate(8deg);
+}
+
+/* === Responsive Design === */
+
+/* Tablet and below */
+@media (max-width: 768px) {
+  .landingMainContainer {
+    flex-direction: column-reverse;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .landingMainContainer > div:nth-child(2) {
+    gap: 1rem;
+  }
+
+  .landingMainContainer > div:nth-child(2) img {
+    height: 250px;
+    max-width: 45%;
+  }
+
+  .landingPageContainer nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .landingPageContainer nav .navlist {
+    justify-content: flex-start;
+    gap: 1rem;
+  }
+
+  .landingMainContainer > div:nth-child(1) {
+    font-size: 1.6rem;
+  }
+
+  .landingMainContainer > div:nth-child(1) p {
+    font-size: 1rem;
+  }
+
+  .landingMainContainer > div:nth-child(1) div[role="button"] {
+    font-size: 1rem;
+    padding: 0.7rem 1.2rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .landingPageContainer nav h2 {
+    font-size: 1.4rem;
+  }
+
+  .landingPageContainer nav .navlist {
+    font-size: 0.95rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .landingMainContainer > div:nth-child(1) {
+    font-size: 1.4rem;
+  }
+
+  .landingMainContainer > div:nth-child(1) p {
+    font-size: 0.95rem;
+  }
+
+  .landingMainContainer > div:nth-child(1) div[role="button"] {
+    font-size: 0.95rem;
+    padding: 0.6rem 1rem;
+  }
+
+  .landingMainContainer > div:nth-child(2) img {
+    height: 200px;
+    max-width: 80%;
+  }
+}
+/* === Font Smoothing + Modern Look === */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* === Navigation Bar with Glass Effect === */
+.landingPageContainer nav {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0 0 1rem 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+/* === Hero Title Refinement === */
+.landingMainContainer > div:nth-child(1) h1 {
+  font-size: 5rem;
+  line-height: 1.2;
+  color: #ffffff;
+}
+
+.landingMainContainer > div:nth-child(1) h1 span {
+  color: #ff9900;
+}
+
+/* === Subtitle Smoother === */
+.landingMainContainer > div:nth-child(1) p {
+  font-size: 2rem;
+  color: #f0f0f0;
+  opacity: 0.85;
+}
+
+/* === CTA Button Glow === */
+.landingMainContainer > div:nth-child(1) div[role="button"] {
+  font-size: 1.05rem;
+  padding: 0.8rem 1.6rem;
+  background: linear-gradient(135deg, #ff9100, #d16a00);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 15px rgba(255, 145, 0, 0.4);
+  transition: all 0.3s ease;
+}
+
+.landingMainContainer > div:nth-child(1) div[role="button"]:hover {
+  background: linear-gradient(135deg, #ff7f00, #b85c00);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(255, 140, 0, 0.5);
+}
+
+/* === Add Gradient Overlay to Background === */
+.landingPageContainer::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.9));
+  z-index: 0;
+}
+
+.landingPageContainer > * {
+  position: relative;
+  z-index: 1;
+}

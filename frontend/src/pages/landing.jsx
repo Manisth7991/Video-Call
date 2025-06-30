@@ -6,7 +6,7 @@ export default function Landing() {
 
   const router = useNavigate();
   return (
-    <div className='landingPageContainer'>
+    <div className='landingPageContainer' style={{ backgroundImage: "url('/background.png')" }}>
       <nav>
         <div className='navHeader'><h2>Video Call</h2></div>
         <div className='navlist'>
