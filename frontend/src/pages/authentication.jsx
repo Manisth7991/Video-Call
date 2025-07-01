@@ -17,13 +17,13 @@ import CircularProgress from '@mui/material/CircularProgress';
 const defaultTheme = createTheme({
   typography: {
     fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-    fontSize: 20, // base font size
+    fontSize: 15, // base font size
     h4: {
-      fontSize: '3.4rem',
+      fontSize: '2.3rem',
       fontWeight: 600,
     },
     body1: {
-      fontSize: '1.4rem',
+      fontSize: '1.1rem',
     },
     button: {
       fontSize: '1.2rem',
