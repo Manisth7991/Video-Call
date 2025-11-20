@@ -79,25 +79,3 @@ Add environment variables inside .env:
 MONGO_URI=your_mongo_database_url
 JWT_SECRET=your_secret_key
 PORT=5000
-
-📁 Folder Structure
-video-call-app/
-├── backend/
-│   ├── controllers/
-│   ├── models/
-│   ├── routes/
-│   ├── utils/
-│   ├── server.js
-│   └── .env
-│
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── context/
-│   │   ├── App.js
-│   │   └── index.js
-│   ├── public/
-│   └── package.json
-│
-└── README.md
