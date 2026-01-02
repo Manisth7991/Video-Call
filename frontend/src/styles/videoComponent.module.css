@@ -1,3 +1,199 @@
+/* ==================== LOBBY STYLES ==================== */
+.lobbyContainer {
+    position: relative;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow: hidden;
+}
+
+.lobbyContainer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.hamburgerMenu {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+}
+
+.hamburgerIcon {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 8px;
+}
+
+.hamburgerIcon:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.sideMenu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 999;
+    padding: 20px;
+    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.5);
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+.menuHeader {
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.menuHeader h3 {
+    color: white;
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.menuItems {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.menuItem {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.menuItem:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+}
+
+.menuItem svg {
+    font-size: 1.5rem;
+}
+
+.menuOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.lobbyContent {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 500px;
+}
+
+.lobbyCard {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.lobbyTitle {
+    color: white;
+    font-size: 2rem;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+    text-align: center;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.lobbySubtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    margin: 0 0 30px 0;
+    text-align: center;
+}
+
+.previewVideo {
+    margin: 20px 0;
+    border-radius: 15px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.3);
+    aspect-ratio: 16/9;
+}
+
+.localPreview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.usernameInput {
+    margin-bottom: 10px;
+}
+
+.joinButton {
+    margin-top: 20px;
+}
+
+/* ==================== MEETING SCREEN STYLES ==================== */
 /* Container for full screen video meeting */
 .meetVideoContainer {
     position: relative;
@@ -191,6 +387,30 @@
 
 /* RESPONSIVE DESIGN */
 @media (max-width: 768px) {
+
+    /* Lobby Mobile Styles */
+    .lobbyCard {
+        padding: 30px 20px;
+    }
+
+    .lobbyTitle {
+        font-size: 1.5rem;
+    }
+
+    .lobbySubtitle {
+        font-size: 0.9rem;
+    }
+
+    .sideMenu {
+        width: 250px;
+    }
+
+    .hamburgerMenu {
+        top: 15px;
+        left: 15px;
+    }
+
+    /* Meeting Screen Mobile Styles */
     .conferenceView {
         grid-template-columns: repeat(2, 1fr);
         gap: 4px;
@@ -251,6 +471,28 @@
 
 /* For very small screens (like narrow phones) */
 @media (max-width: 480px) {
+    .lobbyContainer {
+        padding: 10px;
+    }
+
+    .lobbyCard {
+        padding: 25px 15px;
+    }
+
+    .lobbyTitle {
+        font-size: 1.3rem;
+    }
+
+    .sideMenu {
+        width: 80vw;
+        max-width: 280px;
+    }
+
+    .menuItem {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+
     .conferenceView {
         gap: 2px;
         padding: 2px;

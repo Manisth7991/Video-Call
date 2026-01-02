@@ -11,6 +11,11 @@ import MicOffIcon from '@mui/icons-material/MicOff'
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import StopScreenShareIcon from '@mui/icons-material/StopScreenShare'
 import ChatIcon from '@mui/icons-material/Chat'
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import LoginIcon from '@mui/icons-material/Login';
+import HowToRegIcon from '@mui/icons-material/HowToReg';
 
 
 import server from '../environment';
@@ -79,6 +84,8 @@ function VideoMeetComponent() {
     let [askForUsername, setAskForUsername] = useState(true);
 
     let [username, setUsername] = useState("");
+
+    let [showMenu, setShowMenu] = useState(false);
 
     // Only store REMOTE peer videos, never local
     let [remoteVideos, setRemoteVideos] = useState([])
@@ -546,20 +553,106 @@ function VideoMeetComponent() {
 
             {askForUsername === true ?
 
-                <div>
-                    <h2>Enter into Lobby </h2>
-                    <TextField id="outlined-basic" label="Username" value={username} onChange={e => setUsername(e.target.value)} variant="outlined" className={styles.chatInput} />
-                    <Button variant="contained" onClick={connect} sx={{
-                        fontSize: '1rem',
-                        padding: '8px 24px',
-                        margin: '10px',
-                        borderRadius: '8px',
-                        textTransform: 'capitalize',
-                    }}>Connect</Button>
-                    <div>
-                        <video ref={localVideoref} autoPlay muted></video>
+                <div className={styles.lobbyContainer}>
+                    {/* Hamburger Menu */}
+                    <div className={styles.hamburgerMenu}>
+                        <IconButton
+                            onClick={() => setShowMenu(!showMenu)}
+                            className={styles.hamburgerIcon}
+                            sx={{ color: 'white' }}
+                        >
+                            {showMenu ? <CloseIcon fontSize="large" /> : <MenuIcon fontSize="large" />}
+                        </IconButton>
                     </div>
 
+                    {/* Side Menu */}
+                    {showMenu && (
+                        <div className={styles.sideMenu}>
+                            <div className={styles.menuHeader}>
+                                <h3>Menu</h3>
+                            </div>
+                            <div className={styles.menuItems}>
+                                <button className={styles.menuItem}>
+                                    <PersonAddIcon />
+                                    <span>Join as Guest</span>
+                                </button>
+                                <button className={styles.menuItem}>
+                                    <LoginIcon />
+                                    <span>Login</span>
+                                </button>
+                                <button className={styles.menuItem}>
+                                    <HowToRegIcon />
+                                    <span>Register</span>
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Overlay to close menu */}
+                    {showMenu && <div className={styles.menuOverlay} onClick={() => setShowMenu(false)}></div>}
+
+                    <div className={styles.lobbyContent}>
+                        <div className={styles.lobbyCard}>
+                            <h1 className={styles.lobbyTitle}>Welcome to Video Call</h1>
+                            <p className={styles.lobbySubtitle}>Enter your name to join the meeting</p>
+
+                            <div className={styles.previewVideo}>
+                                <video ref={localVideoref} autoPlay muted className={styles.localPreview}></video>
+                            </div>
+
+                            <TextField
+                                id="outlined-basic"
+                                label="Your Name"
+                                value={username}
+                                onChange={e => setUsername(e.target.value)}
+                                variant="outlined"
+                                fullWidth
+                                className={styles.usernameInput}
+                                sx={{
+                                    '& .MuiOutlinedInput-root': {
+                                        color: 'white',
+                                        '& fieldset': {
+                                            borderColor: 'rgba(255, 255, 255, 0.3)',
+                                        },
+                                        '&:hover fieldset': {
+                                            borderColor: 'rgba(255, 255, 255, 0.5)',
+                                        },
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: '#2196f3',
+                                        },
+                                    },
+                                    '& .MuiInputLabel-root': {
+                                        color: 'rgba(255, 255, 255, 0.7)',
+                                    },
+                                }}
+                            />
+
+                            <Button
+                                variant="contained"
+                                onClick={connect}
+                                fullWidth
+                                disabled={!username.trim()}
+                                className={styles.joinButton}
+                                sx={{
+                                    fontSize: '1.1rem',
+                                    padding: '12px 24px',
+                                    marginTop: '20px',
+                                    borderRadius: '8px',
+                                    textTransform: 'capitalize',
+                                    background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+                                    boxShadow: '0 3px 5px 2px rgba(33, 203, 243, .3)',
+                                    '&:hover': {
+                                        background: 'linear-gradient(45deg, #1976D2 30%, #2196F3 90%)',
+                                    },
+                                    '&:disabled': {
+                                        background: 'rgba(255, 255, 255, 0.12)',
+                                    },
+                                }}
+                            >
+                                Join Meeting
+                            </Button>
+                        </div>
+                    </div>
                 </div> :
                 <div className={styles.meetVideoContainer}>
 
