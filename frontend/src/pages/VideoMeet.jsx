@@ -113,52 +113,111 @@ function VideoMeetComponent() {
 
     const getPermissions = async () => {
         try {
-            const videoPermission = await navigator.mediaDevices.getUserMedia({ video: true });
-            if (videoPermission) {
-                setVideoAvailable(true);
-                console.log('Video permission granted');
-            } else {
+            let videoAvailableCheck = false;
+            let audioAvailableCheck = false;
+
+            // Check video permission
+            try {
+                const videoPermission = await navigator.mediaDevices.getUserMedia({ video: true });
+                if (videoPermission) {
+                    videoAvailableCheck = true;
+                    setVideoAvailable(true);
+                    console.log('Video permission granted');
+                    // Stop the test stream
+                    videoPermission.getTracks().forEach(track => track.stop());
+                }
+            } catch (e) {
                 setVideoAvailable(false);
-                console.log('Video permission denied');
+                console.log('Video permission denied:', e);
             }
 
-            const audioPermission = await navigator.mediaDevices.getUserMedia({ audio: true });
-            if (audioPermission) {
-                setAudioAvailable(true);
-                console.log('Audio permission granted');
-            } else {
+            // Check audio permission
+            try {
+                const audioPermission = await navigator.mediaDevices.getUserMedia({ audio: true });
+                if (audioPermission) {
+                    audioAvailableCheck = true;
+                    setAudioAvailable(true);
+                    console.log('Audio permission granted');
+                    // Stop the test stream
+                    audioPermission.getTracks().forEach(track => track.stop());
+                }
+            } catch (e) {
                 setAudioAvailable(false);
-                console.log('Audio permission denied');
+                console.log('Audio permission denied:', e);
             }
 
+            // Check screen share capability
             if (navigator.mediaDevices.getDisplayMedia) {
                 setScreenAvailable(true);
             } else {
                 setScreenAvailable(false);
             }
 
-            if (videoAvailable || audioAvailable) {
-                const userMediaStream = await navigator.mediaDevices.getUserMedia({ video: videoAvailable, audio: audioAvailable });
-                if (userMediaStream) {
-                    window.localStream = userMediaStream;
-                    if (localVideoref.current) {
-                        localVideoref.current.srcObject = userMediaStream;
+            // Now get the actual stream to show preview
+            if (videoAvailableCheck || audioAvailableCheck) {
+                try {
+                    const previewStream = await navigator.mediaDevices.getUserMedia({
+                        video: videoAvailableCheck,
+                        audio: audioAvailableCheck
+                    });
+
+                    if (previewStream) {
+                        window.localStream = previewStream;
+                        console.log('Preview stream obtained:', previewStream);
+
+                        // Show preview in lobby video element
+                        if (localVideoref.current) {
+                            localVideoref.current.srcObject = previewStream;
+                            localVideoref.current.play().catch(err => {
+                                console.log('Preview play error:', err);
+                            });
+                        }
                     }
+                } catch (streamError) {
+                    console.error('Error getting preview stream:', streamError);
                 }
             }
         } catch (error) {
-            console.log(error);
+            console.log('Error getting permissions:', error);
         }
     };
 
-    // Initialize media stream only once when connecting
-    let getMedia = () => {
+    // Use existing stream when joining the call
+    let getMedia = async () => {
         setVideo(videoAvailable);
         setAudio(audioAvailable);
 
-        // Ensure local video is displaying
+        // Stream already exists from getPermissions()
+        // Just ensure it's assigned to the video element
         if (window.localStream && localVideoref.current) {
             localVideoref.current.srcObject = window.localStream;
+            try {
+                await localVideoref.current.play();
+                console.log('Local video playing in meeting');
+            } catch (playError) {
+                console.error('Error playing local video:', playError);
+            }
+        } else if (!window.localStream) {
+            // Fallback: if stream doesn't exist, get it now
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: videoAvailable,
+                    audio: audioAvailable
+                });
+
+                if (stream) {
+                    window.localStream = stream;
+                    console.log('Local stream obtained in getMedia:', stream);
+
+                    if (localVideoref.current) {
+                        localVideoref.current.srcObject = stream;
+                        await localVideoref.current.play();
+                        console.log('Local video playing');
+                    }
+                }
+            } catch (error) {
+                console.error('Error getting media:', error);
+            }
         }
 
         connectToSocketServer();
@@ -546,6 +605,23 @@ function VideoMeetComponent() {
     }, [message, username]);
 
 
+    // Ensure video displays properly in both lobby and meeting
+    useEffect(() => {
+        const assignStreamToVideo = async () => {
+            if (window.localStream && localVideoref.current) {
+                try {
+                    localVideoref.current.srcObject = window.localStream;
+                    await localVideoref.current.play();
+                    console.log('Local video assigned and playing via useEffect');
+                } catch (error) {
+                    console.error('Error assigning/playing local video:', error);
+                }
+            }
+        };
+
+        assignStreamToVideo();
+    }, [askForUsername]); // Run when user joins or stays in lobby
+
     let connect = () => {
         setAskForUsername(false);
         getMedia();
@@ -564,7 +640,7 @@ function VideoMeetComponent() {
                             <p className={styles.lobbySubtitle}>Enter your name to join the meeting</p>
 
                             <div className={styles.previewVideo}>
-                                <video ref={localVideoref} autoPlay muted className={styles.localPreview}></video>
+                                <video ref={localVideoref} autoPlay muted playsInline className={styles.localPreview}></video>
                             </div>
 
                             <TextField
@@ -691,7 +767,7 @@ function VideoMeetComponent() {
                     </div>
 
 
-                    <video className={styles.meetUserVideo} ref={localVideoref} autoPlay muted></video>
+                    <video className={styles.meetUserVideo} ref={localVideoref} autoPlay muted playsInline></video>
 
                     <div className={styles.conferenceView}>
                         {remoteVideos.map((video) => (
