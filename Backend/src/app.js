@@ -5,6 +5,10 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import { connectToSocket } from './controllers/socketManager.js';
 import userRoutes from './routes/users.routes.js';
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config();
 
 const app = express();
 const server = createServer(app);
@@ -22,7 +26,11 @@ app.use("/api/v1/users", userRoutes);
 
 const start = async () => {
     try {
-        const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://7991manisth:oQzETXF87PRcyuBU@cluster0.ply0qyq.mongodb.net/videochat?retryWrites=true&w=majority&appName=Cluster0';
+        const MONGODB_URI = process.env.MONGODB_URI;
+
+        if (!MONGODB_URI) {
+            throw new Error('MONGODB_URI is not defined in environment variables');
+        }
 
         const connectionDB = await mongoose.connect(MONGODB_URI, {
             serverSelectionTimeoutMS: 10000,
