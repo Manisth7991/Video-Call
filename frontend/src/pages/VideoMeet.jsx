@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react'
+import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import io from "socket.io-client";
 import { Badge, IconButton, TextField } from '@mui/material';
 import { Button } from '@mui/material';
@@ -26,6 +26,28 @@ const peerConfigConnections = {
         { "urls": "stun:stun.l.google.com:19302" }
     ]
 }
+
+// Memoized remote video component to prevent unnecessary re-renders
+const RemoteVideo = React.memo(({ socketId, stream }) => {
+    const videoRef = useRef();
+
+    useEffect(() => {
+        if (videoRef.current && stream) {
+            videoRef.current.srcObject = stream;
+        }
+    }, [stream]);
+
+    return (
+        <div key={socketId}>
+            <video
+                ref={videoRef}
+                data-socket={socketId}
+                autoPlay
+                playsInline
+            />
+        </div>
+    );
+});
 
 function VideoMeetComponent() {
 
@@ -606,19 +628,11 @@ function VideoMeetComponent() {
 
                     <div className={styles.conferenceView}>
                         {remoteVideos.map((video) => (
-                            <div key={video.socketId}>
-                                <video
-                                    data-socket={video.socketId}
-                                    ref={ref => {
-                                        if (ref && video.stream) {
-                                            ref.srcObject = video.stream;
-                                        }
-                                    }}
-                                    autoPlay
-                                    playsInline
-                                >
-                                </video>
-                            </div>
+                            <RemoteVideo
+                                key={video.socketId}
+                                socketId={video.socketId}
+                                stream={video.stream}
+                            />
                         ))}
                     </div>
                 </div>
