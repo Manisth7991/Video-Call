@@ -361,23 +361,9 @@ function VideoMeetComponent() {
                 })
 
                 if (id === socketIdRef.current) {
-                    for (let id2 in connections) {
-                        if (id2 === socketIdRef.current) continue
-
-                        try {
-                            window.localStream.getTracks().forEach(track => {
-                                connections[id2].addTrack(track, window.localStream);
-                            });
-                        } catch (e) { console.log(e) }
-
-                        connections[id2].createOffer().then((description) => {
-                            connections[id2].setLocalDescription(description)
-                                .then(() => {
-                                    socketRef.current.emit('signal', id2, JSON.stringify({ 'sdp': connections[id2].localDescription }))
-                                })
-                                .catch(e => console.log(e))
-                        })
-                    }
+                    // When I am the one who just joined, I should wait for offers from existing users
+                    // The existing users already created connections above and will send offers
+                    console.log("I just joined the room, waiting for offers from existing peers");
                 }
             })
         })
