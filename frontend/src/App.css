@@ -19,6 +19,7 @@
   align-items: center;
   flex-wrap: wrap;
   position: relative;
+  z-index: 100;
 }
 
 .landingPageContainer nav h2 {
@@ -148,7 +149,8 @@
   /* Show hamburger icon on mobile */
   .hamburgerIcon {
     display: block;
-    z-index: 1001;
+    z-index: 10002;
+    position: relative;
   }
 
   /* Hide nav list by default, show when menu is open */
@@ -166,7 +168,7 @@
     font-size: 1.4rem;
     align-items: flex-start;
     transition: right 0.3s ease-in-out;
-    z-index: 1000;
+    z-index: 10001;
     box-shadow: -2px 0 20px rgba(0, 0, 0, 0.5);
   }
 
@@ -181,6 +183,7 @@
     background: rgba(255, 255, 255, 0.05);
     border-radius: 10px;
     transition: all 0.3s ease;
+    cursor: pointer;
   }
 
   .landingPageContainer nav .navlist p:hover,
@@ -198,7 +201,7 @@
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
+    z-index: 10000;
   }
 
   .landingMainContainer {

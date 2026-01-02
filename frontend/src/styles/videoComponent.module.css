@@ -212,6 +212,7 @@
     border-radius: 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     z-index: 20;
+    object-fit: cover;
 }
 
 /* Button container at bottom center */
