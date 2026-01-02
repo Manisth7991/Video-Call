@@ -18,11 +18,17 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  position: relative;
 }
 
 .landingPageContainer nav h2 {
   font-size: 2.3rem;
   font-weight: 500;
+}
+
+/* Hamburger Icon - Hidden on desktop */
+.hamburgerIcon {
+  display: none;
 }
 
 .landingPageContainer nav .navlist {
@@ -31,6 +37,11 @@
   cursor: pointer;
   flex-wrap: wrap;
   font-size: 1.6rem;
+}
+
+/* Overlay for mobile menu */
+.menuOverlay {
+  display: none;
 }
 
 /* === Main Landing Section === */
@@ -133,6 +144,63 @@
 
 /* Tablet and below */
 @media (max-width: 768px) {
+
+  /* Show hamburger icon on mobile */
+  .hamburgerIcon {
+    display: block;
+    z-index: 1001;
+  }
+
+  /* Hide nav list by default, show when menu is open */
+  .landingPageContainer nav .navlist {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 280px;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    flex-direction: column;
+    padding: 80px 20px 20px;
+    gap: 2rem;
+    font-size: 1.4rem;
+    align-items: flex-start;
+    transition: right 0.3s ease-in-out;
+    z-index: 1000;
+    box-shadow: -2px 0 20px rgba(0, 0, 0, 0.5);
+  }
+
+  .landingPageContainer nav .navlist.show {
+    right: 0;
+  }
+
+  .landingPageContainer nav .navlist p,
+  .landingPageContainer nav .navlist div[role="button"] {
+    width: 100%;
+    padding: 15px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+  }
+
+  .landingPageContainer nav .navlist p:hover,
+  .landingPageContainer nav .navlist div[role="button"]:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+  }
+
+  /* Show overlay when menu is open */
+  .menuOverlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+
   .landingMainContainer {
     flex-direction: column-reverse;
     align-items: center;
@@ -150,14 +218,8 @@
   }
 
   .landingPageContainer nav {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-
-  .landingPageContainer nav .navlist {
-    justify-content: flex-start;
-    gap: 1rem;
+    flex-direction: row;
+    justify-content: space-between;
   }
 
   .landingMainContainer>div:nth-child(1) {
@@ -180,10 +242,14 @@
     font-size: 1.4rem;
   }
 
+  .hamburgerIcon {
+    display: block;
+  }
+
   .landingPageContainer nav .navlist {
-    font-size: 0.95rem;
-    flex-direction: column;
-    align-items: flex-start;
+    width: 85vw;
+    max-width: 300px;
+    font-size: 1.2rem;
   }
 
   .landingMainContainer>div:nth-child(1) {

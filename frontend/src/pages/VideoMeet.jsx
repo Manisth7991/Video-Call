@@ -85,8 +85,6 @@ function VideoMeetComponent() {
 
     let [username, setUsername] = useState("");
 
-    let [showMenu, setShowMenu] = useState(false);
-
     // Only store REMOTE peer videos, never local
     let [remoteVideos, setRemoteVideos] = useState([])
 
@@ -554,43 +552,6 @@ function VideoMeetComponent() {
             {askForUsername === true ?
 
                 <div className={styles.lobbyContainer}>
-                    {/* Hamburger Menu */}
-                    <div className={styles.hamburgerMenu}>
-                        <IconButton
-                            onClick={() => setShowMenu(!showMenu)}
-                            className={styles.hamburgerIcon}
-                            sx={{ color: 'white' }}
-                        >
-                            {showMenu ? <CloseIcon fontSize="large" /> : <MenuIcon fontSize="large" />}
-                        </IconButton>
-                    </div>
-
-                    {/* Side Menu */}
-                    {showMenu && (
-                        <div className={styles.sideMenu}>
-                            <div className={styles.menuHeader}>
-                                <h3>Menu</h3>
-                            </div>
-                            <div className={styles.menuItems}>
-                                <button className={styles.menuItem}>
-                                    <PersonAddIcon />
-                                    <span>Join as Guest</span>
-                                </button>
-                                <button className={styles.menuItem}>
-                                    <LoginIcon />
-                                    <span>Login</span>
-                                </button>
-                                <button className={styles.menuItem}>
-                                    <HowToRegIcon />
-                                    <span>Register</span>
-                                </button>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Overlay to close menu */}
-                    {showMenu && <div className={styles.menuOverlay} onClick={() => setShowMenu(false)}></div>}
-
                     <div className={styles.lobbyContent}>
                         <div className={styles.lobbyCard}>
                             <h1 className={styles.lobbyTitle}>Welcome to Video Call</h1>
