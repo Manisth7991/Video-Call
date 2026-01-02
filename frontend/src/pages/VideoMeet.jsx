@@ -360,10 +360,19 @@ function VideoMeetComponent() {
                     }
                 })
 
-                if (id === socketIdRef.current) {
-                    // When I am the one who just joined, I should wait for offers from existing users
-                    // The existing users already created connections above and will send offers
-                    console.log("I just joined the room, waiting for offers from existing peers");
+                // Only existing users should create offers to the newly joined user
+                if (id !== socketIdRef.current) {
+                    // I'm an existing user, someone else just joined
+                    // I should create an offer to the newly joined user
+                    if (connections[id]) {
+                        connections[id].createOffer().then((description) => {
+                            connections[id].setLocalDescription(description)
+                                .then(() => {
+                                    socketRef.current.emit('signal', id, JSON.stringify({ 'sdp': connections[id].localDescription }))
+                                })
+                                .catch(e => console.log(e))
+                        })
+                    }
                 }
             })
         })
