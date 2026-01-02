@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useCallback } from 'react'
 import io from "socket.io-client";
 import { Badge, IconButton, TextField } from '@mui/material';
 import { Button } from '@mui/material';
@@ -432,15 +432,17 @@ function VideoMeetComponent() {
         return Object.assign(stream.getVideoTracks()[0], { enabled: false })
     }
 
-    let handleVideo = () => {
+    const handleVideo = useCallback(() => {
         if (videoAvailable) setVideo((prev) => !prev);
-    }
+    }, [videoAvailable]);
 
-    let handleAudio = () => {
+    const handleAudio = useCallback(() => {
         if (audioAvailable) setAudio((prev) => !prev);
-    }
+    }, [audioAvailable]);
 
-
+    const handleScreen = useCallback(() => {
+        setScreen((prev) => !prev);
+    }, []);
 
     useEffect(() => {
         if (screen !== undefined) {
@@ -448,9 +450,12 @@ function VideoMeetComponent() {
         }
     }, [screen])
 
-    let handleScreen = () => {
-        setScreen((prev) => !prev);
-    };
+    // Reset unread messages when chat is opened
+    useEffect(() => {
+        if (showModal) {
+            setNewMessages(0);
+        }
+    }, [showModal]);
 
 
     let handleEndCall = () => {
@@ -476,9 +481,10 @@ function VideoMeetComponent() {
     let closeChat = () => {
         setModal(false);
     }
-    let handleMessage = (e) => {
+
+    const handleMessage = useCallback((e) => {
         setMessage(e.target.value);
-    }
+    }, []);
 
     const addMessage = (data, sender, socketIdSender) => {
         setMessages((prevMessages) => [
@@ -492,13 +498,12 @@ function VideoMeetComponent() {
 
 
 
-    let sendMessage = () => {
+    const sendMessage = useCallback(() => {
+        if (message.trim() === "") return;
         console.log(socketRef.current);
         socketRef.current.emit('chat-message', message, username)
         setMessage("");
-
-        // this.setState({ message: "", sender: username })
-    }
+    }, [message, username]);
 
 
     let connect = () => {
@@ -584,7 +589,12 @@ function VideoMeetComponent() {
                             </IconButton> : <></>}
 
                         <Badge badgeContent={newMessages} max={999} color='secondary'>
-                            <IconButton onClick={() => setModal(!showModal)} style={{ color: "white" }}>
+                            <IconButton onClick={() => {
+                                if (!showModal) {
+                                    setNewMessages(0);
+                                }
+                                setModal(!showModal);
+                            }} style={{ color: "white" }}>
                                 <ChatIcon />
                             </IconButton>
                         </Badge>
