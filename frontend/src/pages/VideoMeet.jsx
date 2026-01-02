@@ -296,6 +296,10 @@ function VideoMeetComponent() {
 
             socketRef.current.on('user-joined', (id, clients) => {
                 clients.forEach((socketListId) => {
+                    // Skip creating connection for own socket ID
+                    if (socketListId === socketIdRef.current) {
+                        return;
+                    }
 
                     connections[socketListId] = new RTCPeerConnection(peerConfigConnections)
                     // Wait for their ice candidate       
