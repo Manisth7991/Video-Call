@@ -146,20 +146,11 @@ function VideoMeetComponent() {
         }
     };
 
-    useEffect(() => {
-        if (video !== undefined && audio !== undefined) {
-            getUserMedia();
-            console.log("SET STATE HAS ", video, audio);
-
-        }
-
-
-    }, [video, audio])
+    // Initialize media stream only once when connecting
     let getMedia = () => {
         setVideo(videoAvailable);
         setAudio(audioAvailable);
         connectToSocketServer();
-
     }
 
 
@@ -455,11 +446,27 @@ function VideoMeetComponent() {
     }
 
     const handleVideo = useCallback(() => {
-        if (videoAvailable) setVideo((prev) => !prev);
+        if (!videoAvailable) return;
+
+        if (window.localStream) {
+            const videoTracks = window.localStream.getVideoTracks();
+            if (videoTracks.length > 0) {
+                videoTracks[0].enabled = !videoTracks[0].enabled;
+                setVideo(videoTracks[0].enabled);
+            }
+        }
     }, [videoAvailable]);
 
     const handleAudio = useCallback(() => {
-        if (audioAvailable) setAudio((prev) => !prev);
+        if (!audioAvailable) return;
+
+        if (window.localStream) {
+            const audioTracks = window.localStream.getAudioTracks();
+            if (audioTracks.length > 0) {
+                audioTracks[0].enabled = !audioTracks[0].enabled;
+                setAudio(audioTracks[0].enabled);
+            }
+        }
     }, [audioAvailable]);
 
     const handleScreen = useCallback(() => {
