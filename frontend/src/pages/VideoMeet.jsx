@@ -301,6 +301,11 @@ function VideoMeetComponent() {
                         return;
                     }
 
+                    // Skip if connection already exists to prevent duplicates
+                    if (connections[socketListId]) {
+                        return;
+                    }
+
                     connections[socketListId] = new RTCPeerConnection(peerConfigConnections)
                     // Wait for their ice candidate       
                     connections[socketListId].onicecandidate = function (event) {
