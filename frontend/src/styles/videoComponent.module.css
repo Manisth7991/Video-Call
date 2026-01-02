@@ -207,12 +207,14 @@
     position: absolute;
     bottom: 10vh;
     left: 2vw;
-    height: 20vh;
+    height: 25vh;
     width: auto;
+    max-width: 200px;
     border-radius: 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     z-index: 20;
     object-fit: cover;
+    background-color: #000;
 }
 
 /* Button container at bottom center */
@@ -250,6 +252,18 @@
     overflow-y: auto;
     position: relative;
     z-index: 1;
+}
+
+/* Show message when alone in call */
+.conferenceView:empty::before {
+    content: 'Waiting for others to join...';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1.5rem;
+    text-align: center;
 }
 
 .conferenceView>div {
@@ -503,8 +517,9 @@
     }
 
     .meetUserVideo {
-        height: 12vh;
+        height: 18vh;
         bottom: 10vh;
         z-index: 20;
+        max-width: 150px;
     }
 }

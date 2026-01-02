@@ -155,6 +155,12 @@ function VideoMeetComponent() {
     let getMedia = () => {
         setVideo(videoAvailable);
         setAudio(audioAvailable);
+
+        // Ensure local video is displaying
+        if (window.localStream && localVideoref.current) {
+            localVideoref.current.srcObject = window.localStream;
+        }
+
         connectToSocketServer();
     }
 
