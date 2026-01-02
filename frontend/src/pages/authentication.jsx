@@ -12,6 +12,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { AuthContext } from '../contexts/AuthContext';
 import { Snackbar } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
+import { useSearchParams } from 'react-router-dom';
 
 // 🔧 Typography theme customization
 const defaultTheme = createTheme({
@@ -33,13 +34,16 @@ const defaultTheme = createTheme({
 });
 
 export default function Authentication() {
+  const [searchParams] = useSearchParams();
+  const mode = searchParams.get('mode');
+
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [name, setName] = React.useState('');
   const [error, setError] = React.useState('');
   const [message, setMessage] = React.useState('');
   const [loading, setLoading] = React.useState(false);
-  const [formState, setFormState] = React.useState(0);
+  const [formState, setFormState] = React.useState(mode === 'signup' ? 1 : 0);
   const [open, setOpen] = React.useState(false);
 
   const { handleRegister, handleLogin } = React.useContext(AuthContext);
@@ -55,9 +59,10 @@ export default function Authentication() {
         setPassword('');
         setName('');
         setError('');
-        setMessage(result);
+        setMessage(result || 'Registration successful! You can now sign in.');
         setOpen(true);
-        setFormState(0);
+        // Switch to login after 2 seconds to show success message
+        setTimeout(() => setFormState(0), 2000);
       }
     } catch (err) {
       const message = err.response?.data?.message || 'An unexpected error occurred.';
@@ -80,10 +85,11 @@ export default function Authentication() {
         {/* Left Image Panel */}
         <Grid
           item
-          xs={12}
+          xs={false}
           sm={4}
-          md={6}
+          md={7}
           sx={{
+            display: { xs: 'none', sm: 'block' },
             position: 'relative',
             backgroundImage: 'url(/background.png)',
             backgroundRepeat: 'no-repeat',
@@ -128,11 +134,13 @@ export default function Authentication() {
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
           <Box
             sx={{
-              my: 8,
-              mx: 4,
+              my: { xs: 4, sm: 8 },
+              mx: { xs: 3, sm: 4, md: 6 },
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
+              minHeight: { xs: 'auto', sm: '80vh' },
+              justifyContent: 'center',
             }}
           >
             <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>

@@ -11,8 +11,8 @@ export default function Landing() {
         <div className='navHeader'><h2>Video Call</h2></div>
         <div className='navlist'>
           <p onClick={() => router("/wejguow")}>Join as Guest</p>
-          <p onClick={() => router("/auth")}>Register</p>
-          <div onClick={() => router("/auth")} role='button'>
+          <p onClick={() => router("/auth?mode=signup")}>Register</p>
+          <div onClick={() => router("/auth?mode=login")} role='button'>
             <p>Login</p>
           </div>
         </div>
@@ -20,7 +20,7 @@ export default function Landing() {
 
       <div className="landingMainContainer">
         <div>
-          <h1><span style={{color:"#FF9839"}}>Connect</span> with your Loved ones</h1>
+          <h1><span style={{ color: "#FF9839" }}>Connect</span> with your Loved ones</h1>
           <p>Cover a distance by Video Call</p>
           <div role='button'>
             <Link to={"/auth"}> Get Started</Link>

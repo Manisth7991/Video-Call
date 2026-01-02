@@ -22,16 +22,20 @@ app.use("/api/v1/users", userRoutes);
 
 const start = async () => {
     try {
-        const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://7991manisth:oQzETXF87PRcyuBU@cluster0.ply0qyq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+        const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://7991manisth:oQzETXF87PRcyuBU@cluster0.ply0qyq.mongodb.net/videochat?retryWrites=true&w=majority&appName=Cluster0';
 
-        const connectionDB = await mongoose.connect(MONGODB_URI);
-        console.log('Connected to MongoDB');
+        const connectionDB = await mongoose.connect(MONGODB_URI, {
+            serverSelectionTimeoutMS: 10000,
+            socketTimeoutMS: 45000,
+        });
+        console.log('✅ Connected to MongoDB');
 
         server.listen(app.get("port"), () => {
-            console.log(`Server is running on port ${app.get("port")}`);
+            console.log(`🚀 Server is running on port ${app.get("port")}`);
         });
     } catch (error) {
-        console.error('MongoDB connection error:', error);
+        console.error('❌ MongoDB connection error:', error.message);
+        console.error('Check: 1) MongoDB cluster is active 2) Network Access allows 0.0.0.0/0 3) Credentials are correct');
         process.exit(1);
     }
 }
