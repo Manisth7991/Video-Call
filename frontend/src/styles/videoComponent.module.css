@@ -15,6 +15,7 @@
     width: auto;
     border-radius: 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    z-index: 20;
 }
 
 /* Button container at bottom center */
@@ -47,8 +48,11 @@
     padding: 10px;
     padding-bottom: 100px;
     width: 100%;
-    height: 100%;
+    height: calc(100vh - 120px);
+    max-height: calc(100vh - 120px);
     overflow-y: auto;
+    position: relative;
+    z-index: 1;
 }
 
 .conferenceView>div {
@@ -192,6 +196,8 @@
         gap: 4px;
         padding: 5px;
         padding-bottom: 100px;
+        height: calc(100vh - 120px);
+        max-height: calc(100vh - 120px);
     }
 
     .conferenceView>div {
@@ -209,6 +215,7 @@
         top: 10vh;
         right: 5vw;
         font-size: 1rem;
+        z-index: 30;
     }
 
     .meetUserVideo {
@@ -216,6 +223,7 @@
         left: 5vw;
         height: 15vh;
         border-radius: 12px;
+        z-index: 20;
     }
 
     .buttonContainers {
@@ -247,10 +255,13 @@
         gap: 2px;
         padding: 2px;
         padding-bottom: 90px;
+        height: calc(100vh - 100px);
+        max-height: calc(100vh - 100px);
     }
 
     .meetUserVideo {
         height: 12vh;
         bottom: 10vh;
+        z-index: 20;
     }
 }
