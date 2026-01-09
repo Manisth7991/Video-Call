@@ -5,12 +5,12 @@ import bcrypt, { hash } from 'bcrypt';
 import crypto from 'crypto';
 import { Meeting } from "../models/meeting.model.js";
 
-const login = async(req, res) => {
+const login = async (req, res) => {
     const { username, password } = req.body;
     if (!username || !password) {
-        return res.status(httpStatus.BAD_REQUEST).json({message: "Username and password are required"});
+        return res.status(httpStatus.BAD_REQUEST).json({ message: "Username and password are required" });
     }
-    try{
+    try {
         const user = await User.findOne({ username });
         if (!user) {
             return res.status(httpStatus.NOT_FOUND).json({ message: "User Not Found" })
@@ -24,28 +24,38 @@ const login = async(req, res) => {
 
             user.token = token;
             await user.save();
-            return res.status(httpStatus.OK).json({ token: token })
+
+            // FIXED FOR CORS + HTTPONLY COOKIE AUTH: Different settings for dev/prod
+            const isProduction = process.env.NODE_ENV === 'production';
+            res.cookie('token', token, {
+                httpOnly: true,
+                secure: isProduction, // true in production (HTTPS), false in dev (HTTP)
+                sameSite: isProduction ? 'none' : 'lax', // 'none' for cross-origin prod, 'lax' for localhost
+                maxAge: 24 * 60 * 60 * 1000 // 24 hours
+            });
+
+            return res.status(httpStatus.OK).json({ message: "Login successful" })
         } else {
             return res.status(httpStatus.UNAUTHORIZED).json({ message: "Invalid Username or password" })
         }
-        
-    }catch(err){
+
+    } catch (err) {
         console.error(err);
-        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({message: "Internal server error"});
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: "Internal server error" });
     }
 }
 
-const register = async(req , res) => {
-    const {name , username, password} = req.body;
+const register = async (req, res) => {
+    const { name, username, password } = req.body;
 
     if (!name || !username || !password) {
         return res.status(httpStatus.BAD_REQUEST).json({ message: "All fields are required" });
     }
 
-    try{
-        const existingUser = await User.findOne({username});
-        if(existingUser){
-            return res.status(httpStatus.FOUND).json({message: "User already exists"});
+    try {
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
+            return res.status(httpStatus.FOUND).json({ message: "User already exists" });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -56,18 +66,25 @@ const register = async(req , res) => {
             password: hashedPassword
         });
         await newUser.save();
-        return res.status(httpStatus.CREATED).json({message: "User registered successfully"});
-    }catch(err){
+        return res.status(httpStatus.CREATED).json({ message: "User registered successfully" });
+    } catch (err) {
         console.error(err);
-        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({message: "Internal server error"});
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: "Internal server error" });
     }
 }
 
 const getUserHistory = async (req, res) => {
-    const { token } = req.query;
+    const token = req.cookies.token;
+
+    if (!token) {
+        return res.status(httpStatus.UNAUTHORIZED).json({ message: "No authentication token found" });
+    }
 
     try {
         const user = await User.findOne({ token: token });
+        if (!user) {
+            return res.status(httpStatus.NOT_FOUND).json({ message: "User not found" });
+        }
         const meetings = await Meeting.find({ user_id: user.username })
         res.json(meetings)
     } catch (e) {
@@ -76,16 +93,24 @@ const getUserHistory = async (req, res) => {
 }
 
 const addToHistory = async (req, res) => {
-    const { token, meeting_code } = req.body;
+    const token = req.cookies.token;
+    const { meeting_code } = req.body;
+
+    if (!token) {
+        return res.status(httpStatus.UNAUTHORIZED).json({ message: "No authentication token found" });
+    }
 
     try {
         const user = await User.findOne({ token: token });
+        if (!user) {
+            return res.status(httpStatus.NOT_FOUND).json({ message: "User not found" });
+        }
 
         const newMeeting = new Meeting({
             user_id: user.username,
             meetingCode: meeting_code
         })
-        
+
 
         await newMeeting.save();
 
@@ -95,4 +120,39 @@ const addToHistory = async (req, res) => {
     }
 }
 
-export { login, register, getUserHistory , addToHistory };
+const logout = async (req, res) => {
+    try {
+        // FIXED FOR CORS + HTTPONLY COOKIE AUTH: Must match login cookie options
+        const isProduction = process.env.NODE_ENV === 'production';
+        res.clearCookie('token', {
+            httpOnly: true,
+            secure: isProduction,
+            sameSite: isProduction ? 'none' : 'lax'
+        });
+        return res.status(httpStatus.OK).json({ message: "Logged out successfully" });
+    } catch (err) {
+        console.error(err);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: "Internal server error" });
+    }
+}
+
+const checkAuth = async (req, res) => {
+    const token = req.cookies.token;
+
+    if (!token) {
+        return res.status(httpStatus.UNAUTHORIZED).json({ authenticated: false });
+    }
+
+    try {
+        const user = await User.findOne({ token: token });
+        if (!user) {
+            return res.status(httpStatus.UNAUTHORIZED).json({ authenticated: false });
+        }
+        return res.status(httpStatus.OK).json({ authenticated: true });
+    } catch (err) {
+        console.error(err);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ authenticated: false });
+    }
+}
+
+export { login, register, getUserHistory, addToHistory, logout, checkAuth };

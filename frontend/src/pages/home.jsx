@@ -13,48 +13,56 @@ function HomeComponent() {
     let navigate = useNavigate();
     const [meetingcode, setMeetingCode] = useState("");
 
-    const {addToUserHistory} = useContext(AuthContext);
+    const { addToUserHistory, handleLogout } = useContext(AuthContext);
 
     let handleJoinVideoCall = async () => {
         await addToUserHistory(meetingcode);
-        navigate(`/${meetingcode}`); 
+        navigate(`/${meetingcode}`);
     }
-  return (
-    <>
-    <div className='navBar'>
-        <div style={{ display: 'flex',alignItems: 'center' }}>
-            <h2>Manisth Video Call</h2>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center'}}>
-            <IconButton onClick={() => navigate("/history")}>
-                <RestoreIcon/>
-            </IconButton>
-            <p>History</p>
-            <Button onClick ={() => {
-                localStorage.removeItem("token");
-                navigate("/auth");
-            }}>
-                Logout
-            </Button>
-        </div>
-    </div>
 
-    <div className="meetContainer">
-        <div className="leftPanel">
-            <div>
-                <h2>Providing Quality Video Call Just Like Quality Education</h2>
-                <div style={{display: 'flex',gap: '10px'}}>
-                    <TextField onChange={(e) => setMeetingCode(e.target.value)} id='outlined-basic' label="Enter Meeting Code" variant="outlined" />
-                    <Button variant="contained" onClick={handleJoinVideoCall}>Join</Button>
+    const logout = async () => {
+        try {
+            await handleLogout();
+            navigate("/auth");
+        } catch (error) {
+            console.error("Logout failed:", error);
+            navigate("/auth");
+        }
+    }
+
+    return (
+        <>
+            <div className='navBar'>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <h2>Manisth Video Call</h2>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <IconButton onClick={() => navigate("/history")}>
+                        <RestoreIcon />
+                    </IconButton>
+                    <p>History</p>
+                    <Button onClick={logout}>
+                        Logout
+                    </Button>
                 </div>
             </div>
-        </div>
-        <div className="rightPanel">
-            <img src="/logo3.png" alt="Manisth Video Call Logo"/>
-        </div>
-    </div>
-    </>
-  )
+
+            <div className="meetContainer">
+                <div className="leftPanel">
+                    <div>
+                        <h2>Providing Quality Video Call Just Like Quality Education</h2>
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                            <TextField onChange={(e) => setMeetingCode(e.target.value)} id='outlined-basic' label="Enter Meeting Code" variant="outlined" />
+                            <Button variant="contained" onClick={handleJoinVideoCall}>Join</Button>
+                        </div>
+                    </div>
+                </div>
+                <div className="rightPanel">
+                    <img src="/logo3.png" alt="Manisth Video Call Logo" />
+                </div>
+            </div>
+        </>
+    )
 }
 
 export default withAuth(HomeComponent);

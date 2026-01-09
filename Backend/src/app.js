@@ -2,6 +2,7 @@ import express from 'express';
 import { createServer } from 'node:http';
 import { Server } from "socket.io";
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import { connectToSocket } from './controllers/socketManager.js';
 import userRoutes from './routes/users.routes.js';
@@ -16,7 +17,32 @@ const io = connectToSocket(server);
 
 
 app.set("port", (process.env.PORT || 8000));
-app.use(cors());
+
+// FIXED FOR CORS + HTTPONLY COOKIE AUTH: Allow both localhost and production
+const allowedOrigins = [
+    'http://localhost:3000',
+    'https://video-call-frontend-91ty.onrender.com'
+];
+
+app.use(cors({
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps, Postman, or same-origin)
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.indexOf(origin) !== -1 || process.env.CLIENT_URL === origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true, // Allow cookies
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Set-Cookie'],
+    optionsSuccessStatus: 200
+}));
+
+app.use(cookieParser());
 app.use(express.json({ limit: '40kb' }));
 app.use(express.urlencoded({ extended: true, limit: '40kb' }));
 
