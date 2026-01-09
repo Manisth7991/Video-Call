@@ -27,12 +27,18 @@ const login = async (req, res) => {
 
             // FIXED FOR CORS + HTTPONLY COOKIE AUTH: Different settings for dev/prod
             const isProduction = process.env.NODE_ENV === 'production';
-            res.cookie('token', token, {
+            const cookieOptions = {
                 httpOnly: true,
                 secure: isProduction, // true in production (HTTPS), false in dev (HTTP)
                 sameSite: isProduction ? 'none' : 'lax', // 'none' for cross-origin prod, 'lax' for localhost
                 maxAge: 24 * 60 * 60 * 1000 // 24 hours
-            });
+            };
+
+            console.log('Login - Setting cookie with options:', cookieOptions);
+            console.log('Login - Token:', token);
+            console.log('Login - NODE_ENV:', process.env.NODE_ENV);
+
+            res.cookie('token', token, cookieOptions);
 
             return res.status(httpStatus.OK).json({ message: "Login successful" })
         } else {
@@ -139,19 +145,26 @@ const logout = async (req, res) => {
 const checkAuth = async (req, res) => {
     const token = req.cookies.token;
 
+    // DEBUG: Log what we receive
+    console.log('Check Auth - Cookies received:', req.cookies);
+    console.log('Check Auth - Token:', token);
+
     if (!token) {
-        return res.status(httpStatus.UNAUTHORIZED).json({ authenticated: false });
+        console.log('Check Auth - No token found in cookies');
+        return res.status(httpStatus.UNAUTHORIZED).json({ authenticated: false, message: 'No token found' });
     }
 
     try {
         const user = await User.findOne({ token: token });
         if (!user) {
-            return res.status(httpStatus.UNAUTHORIZED).json({ authenticated: false });
+            console.log('Check Auth - User not found for token');
+            return res.status(httpStatus.UNAUTHORIZED).json({ authenticated: false, message: 'Invalid token' });
         }
+        console.log('Check Auth - Success for user:', user.username);
         return res.status(httpStatus.OK).json({ authenticated: true });
     } catch (err) {
-        console.error(err);
-        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ authenticated: false });
+        console.error('Check Auth - Error:', err);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ authenticated: false, message: 'Server error' });
     }
 }
 
